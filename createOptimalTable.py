@@ -69,12 +69,12 @@ def optimalOneMax(n):
         minTmp = -1 # The best estimated time we've found until now
         index = -1  # The k that gave us minTmp
         
-        for k in range(1,n-i):     #for each possible number of flip
+        for k in range(1,n+1):     #for each possible number of flip
             
             mySum = 0
             pTot = 0  #The sum of all probabilities already computed
             
-            for j in range(1,k+1):   #for each amelioration we can hope
+            for j in range(1,min(k,n-i)+1):   #for each amelioration we can hope
                 
                 p = probabilityGoodFlipLog10(n,k,j,i)
                 mySum += p * bestSoFar[i+j][0]

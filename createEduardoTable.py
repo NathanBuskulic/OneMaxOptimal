@@ -64,12 +64,12 @@ def optimalOneMax(n,table):
     bestSoFar = {n:(0,0),n-1:(n,1)}  #dict who tells us for each level : (The expected time to the solution, The optimal number of bits to flip)
     
     
-    for i in range(n-2,(n//2)-1,-1):   #for each level
+    for i in range(n-2,0,-1):   #for each level
         
         
         # We get the k we'll use
-        k = int(table[(i-n//2)])
-        print(i,(i-n//2),k)
+        k = int(table[(i)])
+        print(i,i,k)
         #print(k)
         
         #for k in range(1,n-i):     #for each possible number of flip
@@ -77,7 +77,7 @@ def optimalOneMax(n,table):
         mySum = 0
         pTot = 0  #The sum of all probabilities already computed
         
-        for j in range(1,min(k+1,n-i+1)):   #for each amelioration we can hope
+        for j in range(1,min(k,n-i)+1):   #for each amelioration we can hope
             
             p = probabilityGoodFlipLog10(n,k,j,i)
             mySum += p * bestSoFar[i+j][0]
@@ -95,7 +95,7 @@ def optimalOneMax(n,table):
 
 
 table = np.load(PATH_TO_TABLE)
-SIZE = len(table) * 2
+SIZE = len(table)
 
 
 # We compute the list we are going to use for the probability
@@ -104,6 +104,6 @@ tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 # We compute the optimal solution
 opti = optimalOneMax(SIZE,table)
 
-    
+print(opti)
 #We save the result:
 np.save(PATH_TO_WRITE,opti)
