@@ -69,7 +69,7 @@ def optimalOneMax(n,table):
         
         # We get the k we'll use
         k = int(table[(i)])
-        print(i,i,k)
+       # print(i,i,k)
         #print(k)
         
         #for k in range(1,n-i):     #for each possible number of flip
@@ -104,6 +104,6 @@ tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 # We compute the optimal solution
 opti = optimalOneMax(SIZE,table)
 
-print(opti)
+#print(opti)
 #We save the result:
 np.save(PATH_TO_WRITE,opti)

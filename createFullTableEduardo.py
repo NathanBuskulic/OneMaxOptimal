@@ -20,7 +20,7 @@ n = len(table)*2
 for i in range(0,len(table)):
     v = n//2 - i
     print(v, n//2 + v//2)
-    newTable.append(n - table[v//2-1])
+    newTable.append(n - table[v-1])
    
 #print(table)
 result = np.concatenate((newTable,table), axis=0)
