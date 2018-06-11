@@ -154,8 +154,9 @@ def probabilityGoodFlipLog10(n,k,j,i):
 #    return bestSoFar
 #
 #
-#SIZE = 1500
-tabLog = np.cumsum(np.log10(np.arange(1,5+1)))
+SIZE = 100
+tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
+
 ##print(tabLog[1] - tabLog[0] - tabLog[0])
 ##print(tabLog)
 ##tabLog = np.cumsum(tabLog)
@@ -175,9 +176,14 @@ tabLog = np.cumsum(np.log10(np.arange(1,5+1)))
 #    mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * table[i][0]
 #print(mySum)
 
+table = np.load('tables/optimal/100.npy').item()
 
-
-print(probabilityGoodFlipLog10(5,3,3,3))
+mySum = 0
+for i in range(1,SIZE+1):
+    mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * table[i][0]
+print(mySum)
+        
+#print(probabilityGoodFlipLog10(5,3,3,3))
 
 
 #
