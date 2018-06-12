@@ -90,6 +90,13 @@ def optimalOneMax(n):
                     index = k
         
         bestSoFar[i] = (minTmp,index)
+        
+    # We compute the expected time in general
+    mySum = 0
+    for i in range(1,SIZE+1):
+        mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * bestSoFar[i][0]
+    bestSoFar['Expected Time General'] = (mySum,'All')
+    return bestSoFar
     
     return bestSoFar
 
@@ -102,14 +109,5 @@ tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 # We compute the optimal solution
 opti = optimalOneMax(SIZE)
 
-##We get all the keys in a nice order
-#myKeys = list(opti.keys())[1:]
-#myKeys.reverse()
-
-#result = []     #Our result list filled with couple (optimal, "optimal")
-#for i in range(len(non_opt)):
-#    result.append((opti[myKeys[i]][1],non_opt[i]))
-    
 #We save the result:
 np.save(PATH_TO_WRITE,opti)
-#print(opti)

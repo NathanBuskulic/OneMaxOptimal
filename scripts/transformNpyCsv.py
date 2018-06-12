@@ -17,6 +17,9 @@ table = np.load(PATH_TABLE)
 result = pd.DataFrame.from_dict(table.item(),orient='index')
 result.columns = ['Expected time','k^*']
 
-ind = np.arange(1,len(table.item()) + 1)[::-1]
+#ind = np.arange(1,len(table.item()) + 1)[::-1]
+ind = list(table.item().keys())
 result.index = ind
+ind = ['Expected Time General'] + ind[:-1]
+result = result.reindex(ind)
 result.to_csv(PATH_TO_WRITE)
