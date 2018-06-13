@@ -20,7 +20,7 @@ import math
 import sys
 import sympy
 import copy
-
+import matplotlib.pyplot as plt
 
 
 
@@ -154,7 +154,7 @@ def probabilityGoodFlipLog10(n,k,j,i):
 #    return bestSoFar
 #
 #
-SIZE = 500
+SIZE = 1000
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 
 ##print(tabLog[1] - tabLog[0] - tabLog[0])
@@ -176,12 +176,21 @@ tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 #    mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * table[i][0]
 #print(mySum)
 
-table = np.load('tables/oneEA/500.npy').item()
+table = np.load('tables/oneEA/1000.npy').item()
+table2 = [table[i][1] for i in table][:-500]
+print(table2)
+plt.plot(range(1000,499,-1),table2)
 
-mySum = 0
-for i in range(1,SIZE+1):
-    mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * table[i][0]
-print(mySum)
+#mySum = 0
+diff = []
+l = []
+for i in range(SIZE//2+1,SIZE+1):
+    formula = 1 / (2 * i + 2 - SIZE)
+    l.append(formula)
+    diffTmp = table[i][1] - formula
+    diff.append(diffTmp)
+#print(diff)
+plt.plot(range(1000,500,-1),l[::-1])
         
 #print(probabilityGoodFlipLog10(5,3,3,3))
 

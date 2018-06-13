@@ -8,15 +8,11 @@ Created on Tue Jun 12 15:42:26 2018
 
 import numpy as np
 import math
-#import scipy.optimize as opti
 import sys
-#import matplotlib.pyplot as plt
 
 SIZE = int(sys.argv[1])
 PATH_TO_WRITE = sys.argv[2]
 
-#table = np.load(PATH_TO_TABLE).item()
-#SIZE = len(table)
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 
 
@@ -78,19 +74,6 @@ def binomialLaw(n,p,k):
         return 10**result
     
     
-#def binomialLawDeriv(n,p,k):
-#    ''' return the derivative of P(X = k) if P follow a binomial Law such as Bin(n,p)
-#        n : The number of experiment
-#        p : probability of success
-#        k : the number we want to reach
-#    '''
-#    
-#    if p == 0 or p == 1:
-#        return 0
-#    else:
-#        result = log10BinomCoef(n,k) + (k-1) * np.log10(p) + (n-k-1) * np.log10(1-p)
-#        return (10**result) * (k - (p*n))
-    
     
 def basicFunction(n,p,i,bestSoFar):
     
@@ -113,58 +96,6 @@ def basicFunction(n,p,i,bestSoFar):
     num += 1        
     return num/den
 
-
-#def derivFunction(p,n,i,bestSoFar):
-#    ''' Return the derivative of the function that find the optimal parameter
-#        n : the size of the problem
-#        p : the probability
-#        i : the number of ones
-#        bestSoFar : results we already have
-#    '''
-#    
-#    u, uPrime, v, vPrime = 0, 0, 0, 0
-#    for k in range(1,n+1):
-#        
-#        tmpU, tmpV = 0, 0
-#        for j in range(1,min(k,n-i)+1):
-#            probaGoodFlip = probabilityGoodFlipLog10(n,k,j,i)
-#            
-#            tmpU += probaGoodFlip * bestSoFar[i+j][0]
-#            tmpV += probaGoodFlip
-#          
-#        binL = binomialLaw(n,p,k)
-#        binLDeriv = binomialLawDeriv(n,p,k)
-#        
-#        u += binL * tmpU
-#        uPrime += binLDeriv * tmpU
-#        v += binL * tmpV
-#        vPrime += binLDeriv * tmpV
-#        
-#    u += 1
-#    return (uPrime * v - u * vPrime) / pow(v,2)
-
-
-#def optimalEA(table,n):
-#    ''' Return a dict with the optimal parameters to use (1+1)EA
-#        table : an already optimal table for RLS
-#        n : the size of the problem
-#    '''
-#    bestSoFar = {n:(0,0)}
-#    
-#    for i in range(n-1,0,-1):
-#        approxP = table[i][1] / n
-#        if approxP == 1:
-#            bestSoFar[i] = (1 + bestSoFar[n-i][0],1)
-#        else:
-#            trueP = opti.newton(derivFunction,approxP,args=(n,i,bestSoFar))
-#            bestSoFar[i] = (basicFunction(n,trueP,i,bestSoFar),trueP)
-#      
-#    # We compute the expected time in general
-#    mySum = 0
-#    for i in range(1,SIZE+1):
-#        mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * bestSoFar[i][0]
-#    bestSoFar['Expected Time General'] = (mySum,'All')
-#    return bestSoFar
 
 def goodP(n,values):
     ''' Return the expected runtime of a static (1+1)EA with a problem of size n
@@ -190,6 +121,6 @@ def goodP(n,values):
     return result
 
 
-listeP = np.linspace(0.8*(1/SIZE),3*(1/SIZE),10)  
-
+#listeP = np.linspace(0.8*(1/SIZE),3*(1/SIZE),10)  
+listeP = [0.0117]
 np.save(PATH_TO_WRITE,goodP(SIZE,listeP))
