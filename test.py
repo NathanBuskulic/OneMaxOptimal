@@ -156,7 +156,7 @@ def probabilityGoodFlipLog10(n,k,j,i):
 #
 #
 
-table = np.load("tables/oneEA/100.npy")
+table = np.load("tables/oneEA/1000.npy")
 table = table.item()
 del table['Expected Time General']
 SIZE = len(table)
