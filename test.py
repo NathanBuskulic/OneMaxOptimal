@@ -15,12 +15,13 @@ Created on Fri Jun  1 13:30:10 2018
 """
 
 import scipy.special as special
+import scipy.optimize as opti
 import numpy as np
 import math
 import sys
 import sympy
 import copy
-
+import matplotlib.pyplot as plt
 
 
 
@@ -154,8 +155,27 @@ def probabilityGoodFlipLog10(n,k,j,i):
 #    return bestSoFar
 #
 #
-SIZE = 500
+
+table = np.load("tables/oneEA/1000.npy")
+table = table.item()
+del table['Expected Time General']
+SIZE = len(table)
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
+
+x = list(range(SIZE,SIZE//2,-1))
+y = [table[i][1] for i in table.keys()][:-SIZE//2]
+#print(y)
+
+def func(x,a,b):
+    #print(x,a,b,c)
+    return 1 / (a * x + b)
+
+popt, pcov = opti.curve_fit(func,x,y)
+#print(*popt)
+plt.plot(x,y)
+newLab = [func(x1, *popt) for x1 in x]
+plt.plot(x, newLab, 'r-', label='fit: a=%5.3f, b=%5.3f' % tuple(popt))
+plt.legend()
 
 ##print(tabLog[1] - tabLog[0] - tabLog[0])
 ##print(tabLog)
@@ -169,19 +189,32 @@ tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 ##print(prob)
 ##print(probAttendue)
 
-#table = np.load("tables/optimal/optimalTable1500.npy")
-#table = table.item()
+#print(table)
 #mySum = 0
-#for i in range(1,1500):
+#for i in range(1,SIZE+1):
 #    mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * table[i][0]
 #print(mySum)
 
-table = np.load('tables/oneEA/500.npy').item()
+#table = np.load('tables/oneEA/1000.npy').item()
+#table2 = [table[i][1] for i in table][:-500]
+#print(table2)
+#plt.plot(range(1000,499,-1),table2)
 
-mySum = 0
-for i in range(1,SIZE+1):
-    mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * table[i][0]
-print(mySum)
+#mySum = 0
+#diff = []
+#l = []
+#for i in range(SIZE//2+1,SIZE+1):
+#    formula = 1 / (2 * i + 2 - SIZE)
+#    l.append(formula)
+#    diffTmp = table[i][1] - formula
+#    diff.append(diffTmp)
+##print(diff)
+#plt.plot(range(1000,500,-1),l[::-1])
+
+#mySum = 0
+#for i in range(1,SIZE+1):
+#    mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * bestSoFar[i][0]
+
         
 #print(probabilityGoodFlipLog10(5,3,3,3))
 

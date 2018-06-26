@@ -14,6 +14,7 @@ PATH_TABLE = sys.argv[1]
 PATH_TO_WRITE = sys.argv[2]
 
 table = np.load(PATH_TABLE)
+#print(table)
 result = pd.DataFrame.from_dict(table.item(),orient='index')
 result.columns = ['Expected time','k^*']
 

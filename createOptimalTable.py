@@ -55,6 +55,20 @@ def probabilityGoodFlipLog10(n,k,j,i):
     result = combinationZeroes + combinationOnes - totalComb 
     return 10**result
 
+#def allAmeliorationProba(n):
+#    ''' Return all the Pr[f(y) = f(x) + j] for each i,k and j possible
+#        Warning : Long to compute and heavy impact on memory but can save a lot of time
+#        n : The size of the problem
+#    '''
+#    result = {}
+#    for i in range(1,n+1):
+#        result[i] = {}
+#        for k in range(1,n+1):
+#            result[i][k] = {}
+#            for j in range(1,min(k,n-i)+1):
+#                result[i][k][j] = probabilityGoodFlipLog10(n,k,j,i)
+#                
+#    return result
 
 def optimalOneMax(n):
     ''' Return the optimal number of bits to flip at each level (number of ones)
@@ -105,6 +119,8 @@ def optimalOneMax(n):
 
 # We compute the list we are going to use for the probability
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
+
+#allAmelioration = allAmeliorationProba(SIZE)
 
 # We compute the optimal solution
 opti = optimalOneMax(SIZE)
