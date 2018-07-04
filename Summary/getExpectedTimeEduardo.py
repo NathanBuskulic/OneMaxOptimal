@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jun  6 09:06:29 2018
+Created on Wed Jun  6 11:36:57 2018
 
 @author: Nathan
 """
@@ -10,7 +10,7 @@ import numpy as np
 import math
 import sys
 
-SIZE = int(sys.argv[1])  # The size of the OneMax Problem
+PATH_TO_TABLE = sys.argv[1]  # The size of the OneMax Problem
 PATH_TO_WRITE = sys.argv[2]        # The path were we'll write the .npy file
 
 
@@ -55,22 +55,8 @@ def probabilityGoodFlipLog10(n,k,j,i):
     result = combinationZeroes + combinationOnes - totalComb 
     return 10**result
 
-#def allAmeliorationProba(n):
-#    ''' Return all the Pr[f(y) = f(x) + j] for each i,k and j possible
-#        Warning : Long to compute and heavy impact on memory but can save a lot of time
-#        n : The size of the problem
-#    '''
-#    result = {}
-#    for i in range(1,n+1):
-#        result[i] = {}
-#        for k in range(1,n+1):
-#            result[i][k] = {}
-#            for j in range(1,min(k,n-i)+1):
-#                result[i][k][j] = probabilityGoodFlipLog10(n,k,j,i)
-#                
-#    return result
 
-def optimalOneMax(n):
+def optimalOneMax(n,table):
     ''' Return the optimal number of bits to flip at each level (number of ones)
         n : The length of the problem
     '''
@@ -80,50 +66,44 @@ def optimalOneMax(n):
     
     for i in range(n-2,0,-1):   #for each level
         
-        minTmp = -1 # The best estimated time we've found until now
-        index = -1  # The k that gave us minTmp
         
-        for k in range(1,n+1):     #for each possible number of flip
-            
-            mySum = 0
-            pTot = 0  #The sum of all probabilities already computed
-            
-            for j in range(1,min(k,n-i)+1):   #for each amelioration we can hope
-                
-                p = probabilityGoodFlipLog10(n,k,j,i)
-                mySum += p * bestSoFar[i+j][0]
-                pTot += p
-            
-            mySum += 1  # We add the iteration
-            
-            if pTot != 0:
-                mySum = mySum * (1/pTot) # We solve the equation
-                
-                if mySum < minTmp or minTmp == -1:  #If it's the best solution yet
-                    minTmp = mySum
-                    index = k
+        # We get the k we'll use
+        k = int(table[i][1])
+       # print(i,i,k)
+        #print(k)
         
-        bestSoFar[i] = (minTmp,index)
+        #for k in range(1,n-i):     #for each possible number of flip
+            
+        mySum = 0
+        pTot = 0  #The sum of all probabilities already computed
         
-    # We compute the expected time in general
-    mySum = 0
-    for i in range(1,SIZE+1):
-        mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * bestSoFar[i][0]
-    bestSoFar['Expected Time General'] = (mySum,'All')
-    return bestSoFar
+        for j in range(1,min(k,n-i)+1):   #for each amelioration we can hope
+            
+            p = probabilityGoodFlipLog10(n,k,j,i)
+            mySum += p * bestSoFar[i+j][0]
+            pTot += p
+        
+        mySum += 1  # We add the iteration
+        
+        #if pTot != 0:
+        mySum = mySum * (1/pTot) # We solve the equation
     
-    #return bestSoFar
+        bestSoFar[i] = (mySum,k)
+    
+    return bestSoFar
 
 
+
+table = np.load(PATH_TO_TABLE).item()
+SIZE = len(table) - 1
 
 
 # We compute the list we are going to use for the probability
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 
-#allAmelioration = allAmeliorationProba(SIZE)
-
 # We compute the optimal solution
-opti = optimalOneMax(SIZE)
+opti = optimalOneMax(SIZE,table)
 
+#print(opti)
 #We save the result:
 np.save(PATH_TO_WRITE,opti)

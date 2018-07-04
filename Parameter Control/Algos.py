@@ -113,14 +113,16 @@ class MutationChange:
         self.p = p0
         self.problem = problem
         self.results = []
+        self.nbTour = 0
         
     def run(self):
         while not self.problem.isDone():
-            k = 0
-            while k == 0:
-                k = np.random.binomial(self.problem.size,self.p)
+            k = np.random.binomial(self.problem.size,self.p)
+            if k == 0:
+                k = 1
             reward = self.problem.step(k)
-            self.results.append((self.problem.getState(),self.p))
+            #self.results.append((self.problem.getState(),self.p))
+            self.nbTour += 1
             if reward > 0:
                 self.p = min(self.A * self.p,1/2)
             else:
@@ -129,4 +131,52 @@ class MutationChange:
             #self.results.append((self.p,self.problem))
 
     def getResults(self):
-        return self.results           
+        #return self.results
+        return self.nbTour
+
+class RLSMutationChange:
+
+    def __init__(self,rmax,delta,epsilon,problem):
+        
+        self.rmax = rmax
+        self.delta = delta
+        self.epsilon = epsilon
+        self.problem = problem
+        self.v = [0 for i in range(rmax)]
+        self.w = [0 for i in range(rmax)]
+        self.rEtoile = 1
+        self.nbTour = 0
+        
+    def run(self):
+        while not self.problem.isDone():
+            z = np.random.rand(1)
+            if z <= self.delta:
+                r = np.random.randint(self.rmax)
+                reward = self.problem.step(r+1)
+                self.v[r] = ((1-self.epsilon) * self.w[r] * self.v[r] + reward) / ((1 - self.epsilon) * self.w[r] + 1)
+                self.w[r] = (1 - self.epsilon) * self.w[r] + 1
+                for i in range(self.rmax):
+                    if i != r:
+                        self.w[i] = (1 - self.epsilon) * self.w[i]
+            else:
+                indexMax = []
+                maxValue = max(self.v)
+                for i in range(self.rmax):
+                    if self.v[i] == maxValue:
+                        indexMax.append(i)
+                rplus = np.random.choice(indexMax,1)[0]
+                #print(rplus)
+                if self.v[rplus] > self.v[self.rEtoile]:
+                    self.rEtoile = rplus
+                    
+                reward = self.problem.step(self.rEtoile + 1)
+                for i in range(self.rmax):
+                    self.w[i] = (1 - self.epsilon) * self.w[i]
+            self.nbTour += 1
+    
+        
+    def getResults(self):
+        return self.nbTour
+    
+    
+                   

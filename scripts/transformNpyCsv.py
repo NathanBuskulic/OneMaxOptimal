@@ -23,4 +23,4 @@ ind = list(table.item().keys())
 result.index = ind
 ind = ['Expected Time General'] + ind[:-1]
 result = result.reindex(ind)
-result.to_csv(PATH_TO_WRITE)
+result.to_csv(PATH_TO_WRITE,sep="\t")
