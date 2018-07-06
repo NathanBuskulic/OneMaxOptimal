@@ -1,0 +1,6 @@
+,Binary Representation,Expected Time,k-opt
+Expected Time General,NaN,1.25,All
+3,#11,0.0,0
+2,#10,2.0,1
+1,#01,2.0,1
+0,#00,1.0,2

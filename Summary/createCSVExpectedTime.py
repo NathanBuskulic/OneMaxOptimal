@@ -35,8 +35,8 @@ def computeExpectedTime(table,size):
     return mySum
 
 result = {}
-directory = '500/'
-number = 500
+directory = '100/'
+number = 100
 while os.path.exists(directory):
     tabLog = np.cumsum(np.log10(np.arange(1,number+1)))
     
@@ -48,6 +48,10 @@ while os.path.exists(directory):
     pSup0Drift = np.load(directory + 'p-Sup0-drift-2.npy').item()
     pSup0Opt = np.load(directory + 'p-Sup0-opt.npy').item()
     baeck = np.load(directory + 'baeck.npy').item()
+    oldRLS = np.load(directory + 'oldRLS.npy').item()
+    oldEA = np.load(directory + 'old1+1EA.npy').item()
+    oldEASup0 = np.load(directory + 'old1+1Sup0.npy').item()
+    staticpOpt = np.load(directory + 'static-p.npy')
     
     result[number] = [RLSopt['Expected Time General'][0],
                       fulldrift['Expected Time General'][0],
@@ -55,18 +59,31 @@ while os.path.exists(directory):
                       pSup0Drift['Expected Time General'][0],
                       EAopt['Expected Time General'][0],
                       pdrift['Expected Time General'][0],
-                      baeck['Expected Time General'][0]]
+                      baeck['Expected Time General'][0],
+                      oldRLS['Expected Time General'][0],
+                      oldEA['Expected Time General'][0],
+                      staticpOpt[1],
+                      staticpOpt[0],
+                      oldEASup0['Expected Time General'][0]]
     
-    number += 500
+    if number != 100:
+        number += 500
+    else:
+        number = 500
     directory = str(number) + '/'
     
 dt = pd.DataFrame.from_dict(result,orient='index')
-columns = ['E[RLS-opt]',
-           'E[drift]',
-           'E[p-opt{>0}}]',
-           'E[p-drift{>0}}]',
-           'E[p-opt]',
-           'E[p-drift]',
-           'E[Baeck]']
+columns = ['E[dynamic-RLS-opt]',
+           'E[dynamic-RLS-drift]',
+           'E[dynamic-(1+1){>0}-p-opt]',
+           'E[dynamic-(1+1){>0}-p-drift]',
+           'E[dynamic-(1+1)-p-opt]',
+           'E[dynamic-(1+1)-p-drift]',
+           'E[dynamic-(1+1)-Baeck]',
+           'E[static-RLS-1]',
+           'E[static-(1+1)-1/n]',
+           'E[static-(1+1)-p*]',
+           '(1+1)-p*',
+           'E[old-1+1{>0}]']
 dt.columns = columns
 dt.to_csv(PATH_TO_WRITE,sep=',')

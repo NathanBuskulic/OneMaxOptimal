@@ -133,7 +133,8 @@ def binomialLawDerivSup0(n,p,k):
 
 def basicFunction(p,n,i,bestSoFar):
     
-    global allAmelioration
+    #print("basicFunction :",i,n,p)
+    #global allAmelioration
     p = max(p,1/(n**2))
     
     num = 0
@@ -142,7 +143,7 @@ def basicFunction(p,n,i,bestSoFar):
         tmpN = 0
         tmpD = 0
         for j in range(1,min(k,n-i)+1):
-            probaGood = allAmelioration[i][k][j]
+            probaGood = probabilityGoodFlipLog10(n,k,j,i)
             
             tmpN += probaGood * bestSoFar[i+j][0]
             tmpD += probaGood
@@ -163,7 +164,7 @@ def derivFunction(p,n,i,bestSoFar):
         i : the number of ones
         bestSoFar : results we already have
     '''
-    global allAmelioration
+    #global allAmelioration
     
     u, uPrime, v, vPrime = 0, 0, 0, 0
     for k in range(1,n+1):
@@ -200,6 +201,11 @@ def optimalEA(table,n):
         #print(approxP,table[i],i)
         if approxP == 1:
             bestSoFar[i] = (1 + bestSoFar[n-i][0],1)
+        elif approxP == (1/n):
+            trueP = opti.minimize_scalar(basicFunction,args=(n,i,bestSoFar),bounds=[0,0.3],method='bounded')
+            print(i,trueP)
+            trueP.x = max(trueP.x,1/(n**2))
+            bestSoFar[i] = (basicFunction(trueP.x,n,i,bestSoFar),trueP.x)
         else:
             #print(i)
             trueP = opti.minimize_scalar(basicFunction,args=(n,i,bestSoFar),bounds=[0,1],method='bounded')
@@ -214,7 +220,7 @@ def optimalEA(table,n):
     bestSoFar['Expected Time General'] = (mySum,'All')
     return bestSoFar
 
-allAmelioration = allAmeliorationProba(SIZE)
+#allAmelioration = allAmeliorationProba(SIZE)
 #print("DONE !")
 #print(SIZE)
 np.save(PATH_TO_WRITE,optimalEA(table,SIZE))

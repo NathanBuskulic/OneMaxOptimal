@@ -23,20 +23,23 @@ def binOfInt(n):
         result.append(int(i))
     return result
 
+
 table = np.load(PATH_TO_TABLE).item()
-result = {'Expected Time General':['NaN',table['Expected Time General'][0],table['Expected Time General'][1]]}
+SIZE = math.ceil(np.log2(len(table) - 1))
+result = {'Expected Time General':['NaN' for i in range(SIZE)]+[table['Expected Time General'][0],table['Expected Time General'][1]]}
 #table = np.load(PATH_TO_TABLE).item()
 del table['Expected Time General']
 
-SIZE = math.ceil(np.log2(max(table.keys(),key=lambda x:int(x))))
+#SIZE = math.ceil(np.log2(max(table.keys(),key=lambda x:int(x))))
 
-columns = ['Binary Representation','Expected Time', 'k-opt']
-for i in range(2**SIZE-1,0,-1):
-    binstring = '#'
-    for j in binOfInt(i):
-        binstring += str(j)
-    
-    result[i] = [binstring,table[i][0],table[i][1]]
+
+columns = ['#bit' + str(SIZE - i) for i in range(SIZE)]+['Expected Time', 'k-opt']
+for i in range(2**SIZE-1,-1,-1):
+    #binstring = '#'
+    #for j in binOfInt(i):
+    #    binstring += str(j)
+    binrep = binOfInt(i)
+    result[i] = binrep + [table[i][0],table[i][1]]
     
 dt = pd.DataFrame.from_dict(result,orient='index')
 dt.columns = columns

@@ -73,7 +73,7 @@ def probaAmelioration(actualState,j,k):
 def optimalBinVal(n):
     ''' return the optimal number of bits to flip in a binVal problem of size n'''
     
-    bestSoFar = {2**n - 1 : (0,0)}
+    bestSoFar = {2**n - 1 : (0,0),0:(1,n)}
     for i in range(2**n - 2,0,-1):
         minK = -1 #store the minimum k
         valueK = -1 #Store the minimum value associated
@@ -98,9 +98,9 @@ def optimalBinVal(n):
                     minK = k
                 
         bestSoFar[i] = (valueK,minK)
-        
+      
     mySum = 0
-    for i in range(1,2**n - 1):
+    for i in range(0,2**n - 1):
         #print(i,(2**(n)))
         mySum += bestSoFar[i][0]
     bestSoFar['Expected Time General'] = (mySum/len(bestSoFar),'All')
@@ -110,4 +110,5 @@ tabLog = np.cumsum(np.log10(np.arange(1,2**(SIZE+1))))
 
 
 best = optimalBinVal(SIZE)
+#print(best)
 np.save(PATH_TO_WRITE,best)
