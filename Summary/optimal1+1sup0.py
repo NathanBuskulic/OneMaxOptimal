@@ -171,7 +171,7 @@ def derivFunction(p,n,i,bestSoFar):
         
         tmpU, tmpV = 0, 0
         for j in range(1,min(k,n-i)+1):
-            probaGoodFlip = allAmelioration[i][k][j]
+            probaGoodFlip = probabilityGoodFlipLog10(n,k,j,i)
             
             tmpU += probaGoodFlip * bestSoFar[i+j][0]
             tmpV += probaGoodFlip
@@ -202,10 +202,9 @@ def optimalEA(table,n):
         if approxP == 1:
             bestSoFar[i] = (1 + bestSoFar[n-i][0],1)
         elif approxP == (1/n):
-            trueP = opti.minimize_scalar(basicFunction,args=(n,i,bestSoFar),bounds=[0,0.3],method='bounded')
+            trueP = 1/(n**2)
             print(i,trueP)
-            trueP.x = max(trueP.x,1/(n**2))
-            bestSoFar[i] = (basicFunction(trueP.x,n,i,bestSoFar),trueP.x)
+            bestSoFar[i] = (basicFunction(trueP,n,i,bestSoFar),trueP)
         else:
             #print(i)
             trueP = opti.minimize_scalar(basicFunction,args=(n,i,bestSoFar),bounds=[0,1],method='bounded')

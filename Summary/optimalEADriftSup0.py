@@ -117,7 +117,7 @@ def binomialLawDeriv(n,p,k):
 
 def basicFunction(p,n,i):
     
-    global allAmelioration
+    #global allAmelioration
     
     num = 0
     #print("JE PRINT :",n)
@@ -126,7 +126,7 @@ def basicFunction(p,n,i):
         tmpN = 0
         #tmpD = 0
         for j in range(1,min(k,n-i)+1):
-            probaGood = allAmelioration[i][k][j]
+            probaGood = probabilityGoodFlipLog10(n,k,j,i)
             
             tmpN += probaGood * j
             #tmpD += probaGood
@@ -198,6 +198,6 @@ def optimalEA(table,n):
     #return bestSoFar
     return bestSoFar
 
-allAmelioration = allAmeliorationProba(SIZE)
+#allAmelioration = allAmeliorationProba(SIZE)
 print("DONE !")
 np.save(PATH_TO_WRITE,optimalEA(table,SIZE))

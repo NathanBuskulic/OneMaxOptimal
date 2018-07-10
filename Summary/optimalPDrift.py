@@ -175,7 +175,11 @@ def optimalEA(table,n):
         if approxP == 1:
             bestSoFar[i] = (1 + bestSoFar[n-i][0],1)
         else:
-            trueP = opti.minimize_scalar(basicFunction,args=tuple([n,i]),bounds=[0,1],method='bounded')
+            if table[i][1] == 1:
+                boundaries = [0,0.2]
+            else:
+                boundaries = [0,1]
+            trueP = opti.minimize_scalar(basicFunction,args=tuple([n,i]),bounds=boundaries,method='bounded')
             #print(i,trueP)
             bestSoFar[i] = (10789,trueP.x)
       

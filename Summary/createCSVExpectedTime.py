@@ -51,7 +51,7 @@ while os.path.exists(directory):
     oldRLS = np.load(directory + 'oldRLS.npy').item()
     oldEA = np.load(directory + 'old1+1EA.npy').item()
     oldEASup0 = np.load(directory + 'old1+1Sup0.npy').item()
-    staticpOpt = np.load(directory + 'static-p.npy')
+    #staticpOpt = np.load(directory + 'static-p.npy')
     
     result[number] = [RLSopt['Expected Time General'][0],
                       fulldrift['Expected Time General'][0],
@@ -62,8 +62,8 @@ while os.path.exists(directory):
                       baeck['Expected Time General'][0],
                       oldRLS['Expected Time General'][0],
                       oldEA['Expected Time General'][0],
-                      staticpOpt[1],
-                      staticpOpt[0],
+                      #staticpOpt[1],
+                      #staticpOpt[0],
                       oldEASup0['Expected Time General'][0]]
     
     if number != 100:
@@ -82,8 +82,8 @@ columns = ['E[dynamic-RLS-opt]',
            'E[dynamic-(1+1)-Baeck]',
            'E[static-RLS-1]',
            'E[static-(1+1)-1/n]',
-           'E[static-(1+1)-p*]',
-           '(1+1)-p*',
+           #'E[static-(1+1)-p*]',
+           #'(1+1)-p*',
            'E[old-1+1{>0}]']
 dt.columns = columns
 dt.to_csv(PATH_TO_WRITE,sep=',')
