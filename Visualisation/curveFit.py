@@ -15,7 +15,7 @@ import sys
 def func(x,a,b):
     #print(x,a,b,c)
     return 1 / (a * x + b)
-    #return (a * x + b) / c
+    #return (a * (x**2) + b * x + c)
 
 # We get the datas
 tablePStar = np.load("../Summary/3500/p-Sup0-opt.npy").item()
@@ -27,13 +27,14 @@ y = list(tablePStar.values())[SIZE//2:-1]
 y = [x[1] for x in y]
 
 # We get the curve fit
-popt, pcov = opti.curve_fit(func,x,y)
+#popt, pcov = opti.curve_fit(func,x,y)
 
 # We plot it alongside the optimal p*-Sup0
 plt.plot(x,y)
+popt = (0.323,-159.567)
 newLab = [func(x1, *popt) for x1 in x]
 plt.plot(x,y,'b-', label="p*-Sup0")
 plt.plot(x, newLab, 'r-', label='fit: a=%5.3f, b=%5.3f' % tuple(popt))
 plt.legend()
-plt.savefig("curveFit-3500.png")
+#plt.savefig("curveFit-3500-poly2.png")
  

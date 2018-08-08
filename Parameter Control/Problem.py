@@ -20,10 +20,13 @@ class Problem:
         pass
     
 class OneMaxProblem(Problem):
-    def __init__(self,n):
+    def __init__(self,n,startPoint = []):
         ''' Initialisation du problème'''
         self.size = n
-        self.vector = np.random.randint(2,size=self.size)
+        if len(startPoint) == 0:
+            self.vector = np.random.randint(2,size=self.size)
+        else:
+            self.vector = startPoint
         
     def step(self,k):
         ''' flip k bits of the problem '''

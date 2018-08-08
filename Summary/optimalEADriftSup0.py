@@ -14,11 +14,18 @@ import sys
 #import matplotlib.pyplot as plt
 
 PATH_TO_TABLE = sys.argv[1]
-PATH_TO_WRITE = sys.argv[2]
 
 table = np.load(PATH_TO_TABLE).item()
-#print(table)
 SIZE = len(table)
+
+PATH_TO_WRITE = sys.argv[2]
+
+if len(sys.argv) >= 4:
+    lowerBound = float(sys.argv[3])
+else:
+    lowerBound = 1/(SIZE**2)
+
+
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 
 
@@ -179,16 +186,21 @@ def optimalEA(table,n):
     bestSoFar = {n:(0,0)}
     
     for i in range(n-1,0,-1):
-        approxP = table[i][1] / n
+        #approxP = table[i][1] / n
         #print(i,approxP)
         #print(approxP,table[i],i)
-        if approxP == 1:
+        print(table[i][1],n)
+        if table[i][1] == n:
             bestSoFar[i] = (1 + bestSoFar[n-i][0],1)
+        elif table[i][1] == 1:
+            trueP = lowerBound
+            #print("AUTOMATIQUE !!!",i,trueP)
+            bestSoFar[i] = (basicFunction(trueP,n,i),trueP)
         else:
             trueP = opti.minimize_scalar(basicFunction,args=tuple([n,i]),bounds=[0,1],method='bounded')
-            print(i,trueP)
+            print(i,max(trueP.x,lowerBound))
             #print(i,trueP)
-            bestSoFar[i] = (10789,max(trueP.x,1/(n**2)))
+            bestSoFar[i] = (10789,max(trueP.x,lowerBound))
       
     # We compute the expected time in general
     #mySum = 0

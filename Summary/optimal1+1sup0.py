@@ -16,8 +16,14 @@ PATH_TO_TABLE = sys.argv[1]
 PATH_TO_WRITE = sys.argv[2]
 
 table = np.load(PATH_TO_TABLE).item()
-#print(table)
 SIZE = len(table) - 1
+
+if len(sys.argv) >= 4:
+    lowerBound = float(sys.argv[3])
+else:
+    lowerBound = 1/(SIZE**2)
+    
+
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 
 
@@ -135,7 +141,7 @@ def basicFunction(p,n,i,bestSoFar):
     
     #print("basicFunction :",i,n,p)
     #global allAmelioration
-    p = max(p,1/(n**2))
+    #p = max(p,1/(n**2))
     
     num = 0
     den = 0
@@ -195,21 +201,25 @@ def optimalEA(table,n):
     '''
     bestSoFar = {n:(0,0)}
     
+    #TEST = False
+    
     for i in range(n-1,0,-1):
         approxP = table[i][1] / n
         print(approxP)
         #print(approxP,table[i],i)
-        if approxP == 1:
+        if table[i][1] == n:
+            #print("AUTOMATIQUE MAIS PAS LA MEME", i)
             bestSoFar[i] = (1 + bestSoFar[n-i][0],1)
-        elif approxP == (1/n):
-            trueP = 1/(n**2)
-            print(i,trueP)
+        elif table[i][1] == 1:
+            trueP = lowerBound
+            #print("AUTOMATIQUE !!!",i,trueP)
             bestSoFar[i] = (basicFunction(trueP,n,i,bestSoFar),trueP)
         else:
-            #print(i)
+            #print("PAS AUTO LA :",i)
             trueP = opti.minimize_scalar(basicFunction,args=(n,i,bestSoFar),bounds=[0,1],method='bounded')
-            print(i,trueP)
-            trueP.x = max(trueP.x,1/(n**2))
+            #print(i,trueP)
+            trueP.x = max(trueP.x,lowerBound)
+            print(i,trueP.x)
             bestSoFar[i] = (basicFunction(trueP.x,n,i,bestSoFar),trueP.x)
       
     # We compute the expected time in general

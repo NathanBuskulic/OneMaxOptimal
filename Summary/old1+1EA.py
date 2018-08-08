@@ -16,6 +16,12 @@ import sys
 SIZE = int(sys.argv[1])
 PATH_TO_WRITE = sys.argv[2]
 
+# We get the static p we want to use in our algorithm, if nothing provided, take 1/n
+if len(sys.argv) >= 4:
+    staticP = float(sys.argv[3])
+else:
+    staticP = 1/SIZE
+
 #table = np.load(PATH_TO_TABLE).item()
 #print(table)
 #SIZE = len(table) - 1
@@ -166,11 +172,11 @@ def optimalEA(n):
         n : the size of the problem
     '''
     bestSoFar = {n:(0,0)}
-    p = 1/n
+    #p = 1/n
     
     for i in range(n-1,0,-1):
         
-        bestSoFar[i] = (basicFunction(n,p,i,bestSoFar),p)
+        bestSoFar[i] = (basicFunction(n,staticP,i,bestSoFar),staticP)
       
     # We compute the expected time in general
     mySum = 0
