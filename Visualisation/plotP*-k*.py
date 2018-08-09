@@ -8,7 +8,7 @@ Created on Mon Jul 30 11:26:39 2018
 
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
+#import pandas as pd
 import sys
 
 # We get the tables
@@ -29,15 +29,15 @@ else:
 
 # We get the datas
 dataK = list(TABK.values())[borneInf:borneSup]
-dataK = [x[1]/(len(TABK)-1) for x in dataK]
+dataK = [x[1] for x in dataK]
 
 dataP = list(TABP.values())[borneInf:borneSup]
-dataP = [x[1] for x in dataP]
+dataP = [x[1] * (len(TABK) - 1) for x in dataP]
 
 xPoints = list(range(borneInf,borneSup))
 
 # We plot everything and save the figure
-plt.step(xPoints,dataK,label="k*")
-plt.plot(xPoints,dataP,label="p*-Sup0")
+plt.step(xPoints,dataK,label="dynamic RLS-opt")
+plt.plot(xPoints,dataP,label="dynamic (1+1){>0}p-opt")
 plt.legend()
 plt.savefig(PATHTOWRITE)

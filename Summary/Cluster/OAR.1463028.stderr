@@ -1,0 +1,22 @@
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/multiprocessing/pool.py", line 119, in worker
+    result = (True, func(*args, **kwds))
+  File "/usr/lib/python3.5/multiprocessing/pool.py", line 44, in mapstar
+    return list(map(*args))
+  File "executableComputationAllEA-new.py", line 226, in computeBothTables
+    print("j'ai d\xe9marr\xe9 avec "+str(n))
+UnicodeEncodeError: 'ascii' codec can't encode character '\xe9' in position 6: ordinal not in range(128)
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "executableComputationAllEA-new.py", line 241, in <module>
+    results = pool.map(computeBothTables,list(range(2000,10001,500)))
+  File "/usr/lib/python3.5/multiprocessing/pool.py", line 260, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+  File "/usr/lib/python3.5/multiprocessing/pool.py", line 608, in get
+    raise self._value
+UnicodeEncodeError: 'ascii' codec can't encode character '\xe9' in position 6: ordinal not in range(128)

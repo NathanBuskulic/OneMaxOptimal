@@ -1,0 +1,8 @@
+getExpectedTimeEA.py:108: RuntimeWarning: divide by zero encountered in double_scalars
+  return num/den
+getExpectedTimeEA.py:104: RuntimeWarning: invalid value encountered in double_scalars
+  num += binL * tmpN
+getExpectedTimeEA.py:97: RuntimeWarning: invalid value encountered in double_scalars
+  tmpN += probaGood * bestSoFar[i+j][0]
+getExpectedTimeEA.py:131: RuntimeWarning: invalid value encountered in double_scalars
+  mySum += 10**(log10BinomCoef(n,i) - n * np.log10(2)) * bestSoFar[i][0]
