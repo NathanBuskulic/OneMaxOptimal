@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul  2 11:12:16 2018
+Created on Fri Jun  8 14:57:53 2018
 
 @author: Nathan Buskulic
 """
@@ -16,13 +16,6 @@ PATH_TO_WRITE = sys.argv[2]
 
 table = np.load(PATH_TO_TABLE).item()
 SIZE = len(table) - 1
-
-if len(sys.argv) >= 4:
-    lowerBound = float(sys.argv[3])
-else:
-    lowerBound = 1/(SIZE**2)
-    
-
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 
 
@@ -69,21 +62,39 @@ def probabilityGoodFlipLog10(n,k,j,i):
     return 10**result
 
 
+
+def binomialLaw(n,p,k):
+    ''' return P(X = k) if P follow a binomial Law such as Bin(n,p)
+        n : The number of experiment
+        p : probability of success
+        k : the number we want to reach
+    '''
     
-def binomialLawSup0(n,p,k):
-    ''' Return P(X = k) if P follow a bin law such as Bin(n,p) and that 0 can't be taken '''
-    if p <= 0 or p >= 1 or k==0:
+    if p == 0 or p == 1:
         return 0
     else:
-        result = log10BinomCoef(n,k) + k * np.log10(p) + (n-k) * np.log10(1-p) - np.log10(1 - pow((1-p),n))
+        result = log10BinomCoef(n,k) + k * np.log10(p) + (n-k) * np.log10(1-p)
         return 10**result
     
     
+def binomialLawDeriv(n,p,k):
+    ''' return the derivative of P(X = k) if P follow a binomial Law such as Bin(n,p)
+        n : The number of experiment
+        p : probability of success
+        k : the number we want to reach
+    '''
+    
+    if p == 0 or p == 1:
+        return 0
+    else:
+        result = log10BinomCoef(n,k) + (k-1) * np.log10(p) + (n-k-1) * np.log10(1-p)
+        return (10**result) * (k - (p*n))
+    
+    
 
-def basicFunction(p,n,i,bestSoFar):
+def basicFunction(n,p,i,bestSoFar):
     ''' Compute the expected time to reach the optimum in a oneMax problem 
     of size n with a 1+1EA using p at the iteration i '''
-    
     num = 0
     den = 0
     for k in range(1,n+1):
@@ -95,13 +106,43 @@ def basicFunction(p,n,i,bestSoFar):
             tmpN += probaGood * bestSoFar[i+j][0]
             tmpD += probaGood
         
-        binL = binomialLawSup0(n,p,k)
+        binL = binomialLaw(n,p,k)
         
         num += binL * tmpN
         den += binL * tmpD
         
     num += 1        
     return num/den
+
+
+def derivFunction(p,n,i,bestSoFar):
+    ''' Return the derivative of the function that find the optimal parameter
+        n : the size of the problem
+        p : the probability
+        i : the number of ones
+        bestSoFar : results we already have
+    '''
+    
+    u, uPrime, v, vPrime = 0, 0, 0, 0
+    for k in range(1,n+1):
+        
+        tmpU, tmpV = 0, 0
+        for j in range(1,min(k,n-i)+1):
+            probaGoodFlip = probabilityGoodFlipLog10(n,k,j,i)
+            
+            tmpU += probaGoodFlip * bestSoFar[i+j][0]
+            tmpV += probaGoodFlip
+          
+        binL = binomialLaw(n,p,k)
+        binLDeriv = binomialLawDeriv(n,p,k)
+        
+        u += binL * tmpU
+        uPrime += binLDeriv * tmpU
+        v += binL * tmpV
+        vPrime += binLDeriv * tmpV
+        
+    u += 1
+    return (uPrime * v - u * vPrime) / pow(v,2)
 
 
 def optimalEA(table,n):
@@ -111,20 +152,13 @@ def optimalEA(table,n):
     '''
     bestSoFar = {n:(0,0)}
     
-    
     for i in range(n-1,0,-1):
         approxP = table[i][1] / n
-        print(approxP)
-        if table[i][1] == n:
+        if approxP == 1:
             bestSoFar[i] = (1 + bestSoFar[n-i][0],1)
-        elif table[i][1] == 1:
-            trueP = lowerBound
-            bestSoFar[i] = (basicFunction(trueP,n,i,bestSoFar),trueP)
         else:
-            trueP = opti.minimize_scalar(basicFunction,args=(n,i,bestSoFar),bounds=[0,1],method='bounded')
-            trueP.x = max(trueP.x,lowerBound)
-            print(i,trueP.x)
-            bestSoFar[i] = (basicFunction(trueP.x,n,i,bestSoFar),trueP.x)
+            trueP = opti.newton(derivFunction,approxP,args=(n,i,bestSoFar))
+            bestSoFar[i] = (basicFunction(n,trueP,i,bestSoFar),trueP)
       
     # We compute the expected time in general
     mySum = 0
@@ -133,5 +167,5 @@ def optimalEA(table,n):
     bestSoFar['Expected Time General'] = (mySum,'All')
     return bestSoFar
 
-# compute and save the data
+# We compute and save the result
 np.save(PATH_TO_WRITE,optimalEA(table,SIZE))

@@ -3,7 +3,7 @@
 """
 Created on Mon Jul  2 14:23:44 2018
 
-@author: Nathan
+@author: Nathan Buskulic
 """
 
 import numpy as np
@@ -82,7 +82,8 @@ def binomialLawSup0(n,p,k):
         return 10**result
     
 def basicFunction(n,p,i,bestSoFar):
-    
+    ''' Compute the expected time to reach the optimum in a oneMax problem 
+    of size n with a 1+1EA using p at the iteration i '''
     
     p = max(p,1/(n**2))
     
@@ -135,9 +136,7 @@ def optimalOneMax(n,table):
 
 
 table = np.load(PATH_TO_TABLE).item()
-print(table)
 SIZE = len(table)
-#print(SIZE)
 
 
 # We compute the list we are going to use for the probability
@@ -146,6 +145,5 @@ tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 # We compute the optimal solution
 opti = optimalOneMax(SIZE,table)
 
-#print(opti)
 #We save the result:
 np.save(PATH_TO_WRITE,opti)

@@ -3,7 +3,7 @@
 """
 Created on Wed Jun  6 11:36:57 2018
 
-@author: Nathan
+@author: Nathan Buskulic
 """
 
 import numpy as np
@@ -61,7 +61,7 @@ def optimalOneMax(n,table):
         n : The length of the problem
     '''
     
-    bestSoFar = {n:(0,0),n-1:(n,1)}  #dict who tells us for each level : (The expected time to the solution, The optimal number of bits to flip)
+    bestSoFar = {n:(0,0),n-1:(n,1),0:(1,n)}  #dict who tells us for each level : (The expected time to the solution, The optimal number of bits to flip)
     
     
     for i in range(n-2,0,-1):   #for each level
@@ -69,11 +69,7 @@ def optimalOneMax(n,table):
         
         # We get the k we'll use
         k = int(table[i][1])
-       # print(i,i,k)
-        #print(k)
-        
-        #for k in range(1,n-i):     #for each possible number of flip
-            
+                    
         mySum = 0
         pTot = 0  #The sum of all probabilities already computed
         
@@ -85,16 +81,15 @@ def optimalOneMax(n,table):
         
         mySum += 1  # We add the iteration
         
-        #if pTot != 0:
         mySum = mySum * (1/pTot) # We solve the equation
     
         bestSoFar[i] = (mySum,k)
         
-    # We compute the expected time in general
-#    mySum = 0
-#    for i in range(1,n+1):
-#        mySum += 10**(log10BinomCoef(SIZE,i) - SIZE * np.log10(2)) * bestSoFar[i][0]
-#    bestSoFar['Expected Time General'] = (mySum,'All')
+    # Compute the global estimated time
+    mySum = 0
+    for i in range(0,n+1):
+        mySum += 10**(log10BinomCoef(n,i) - n * np.log10(2)) * bestSoFar[i][0]
+    bestSoFar['Expected Time General'] = (mySum,'All')
     
     return bestSoFar
 
@@ -110,6 +105,5 @@ tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 # We compute the optimal solution
 opti = optimalOneMax(SIZE,table)
 
-#print(opti)
 #We save the result:
 np.save(PATH_TO_WRITE,opti)

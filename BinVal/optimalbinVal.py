@@ -19,7 +19,6 @@ def valueBinVal(vec):
 
 def binOfInt(n):
     ''' Return the binomial representation of the integer n '''
-    #print(n)
     monBin = bin(n)[2:]
     result = [0 for i in range(SIZE - len(monBin))]
     for i in monBin:
@@ -28,7 +27,6 @@ def binOfInt(n):
 
 def differencesInBin(vec1,vec2):
     ''' Return the number of zeroes and ones to flip to get from vec1 to vec2 '''
-   # print(vec1,vec2)
     nbZeroes = 0
     nbOnes = 0
     for i in range(len(vec2)):
@@ -55,17 +53,12 @@ def probaAmelioration(actualState,j,k):
     ''' Return the probability that by flipping k bits we go from actualState to actualState + j '''
     actualStateBin = binOfInt(actualState)
     nbZeroesToFlip, nbOnesToFlip = differencesInBin(actualStateBin,binOfInt((valueBinVal(actualStateBin) + j)))
-    #print('proba :', actualState, j, k, nbZeroesToFlip, nbOnesToFlip)
     
     if k != (nbZeroesToFlip + nbOnesToFlip):
         return 0
     
     else:
-        #nbOnes = sum(actualStateBin)
         length = len(actualStateBin)
-        #nbZeroes = length - nbOnes
-        #combZeroes = log10BinomCoef(nbZeroes,nbZeroesToFlip)
-        #combOnes = log10BinomCoef(nbOnes,nbOnesToFlip)
         combTot = log10BinomCoef(length,k)
         
         return 1/10**(combTot)
@@ -82,14 +75,11 @@ def optimalBinVal(n):
             mySum = 0
             pTot = 0
             for j in range(1,2**n-i):
-                #print('BWAH :',i,j,k)
                 proba = probaAmelioration(i,j,k)
-                #print(proba)
                 mySum += proba * bestSoFar[i+j][0]
                 pTot += proba
                 
             mySum += 1
-            #print(i,k,mySum,pTot)
             if pTot != 0:
                 mySum = mySum / pTot
                 
@@ -101,14 +91,12 @@ def optimalBinVal(n):
       
     mySum = 0
     for i in range(0,2**n - 1):
-        #print(i,(2**(n)))
         mySum += bestSoFar[i][0]
     bestSoFar['Expected Time General'] = (mySum/len(bestSoFar),'All')
     return bestSoFar
      
 tabLog = np.cumsum(np.log10(np.arange(1,2**(SIZE+1))))
 
-
+# compute and save the values
 best = optimalBinVal(SIZE)
-#print(best)
 np.save(PATH_TO_WRITE,best)

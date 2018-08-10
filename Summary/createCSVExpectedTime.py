@@ -11,39 +11,19 @@ import os
 import numpy as np
 import sys
 
-PATH_TO_WRITE = sys.argv[1]
+STOP_POINT = int(sys.argv[1])
+PATH_TO_WRITE = sys.argv[2]
 
-
-
-def log10BinomCoef(n,k):
-    ''' Return the Log10 binomial coefficient of n and k
-    '''
-    
-    global tabLog
-    
-    if k <= 0 or k >= n:
-        return 0
-    
-    else:
-        return tabLog[n-1] - tabLog[k-1] - tabLog[n-k-1]
-    
-
-def computeExpectedTime(table,size):
-    mySum = 0
-    for i in range(1,size+1):
-        mySum += 10**(log10BinomCoef(size,i) - size * np.log10(2)) * table[i][0]
-    return mySum
 
 result = {}
 directory = '100/'
 number = 100
-while os.path.exists(directory):
+while number <= STOP_POINT and os.path.exists(directory):
     tabLog = np.cumsum(np.log10(np.arange(1,number+1)))
     
     RLSopt = np.load(directory + 'RLS-opt.npy').item()
     EAopt = np.load(directory + 'EA-opt.npy').item()
     fulldrift = np.load(directory + 'full-drift.npy').item()
-    fulldrift['Expected Time General'] = (computeExpectedTime(fulldrift,len(fulldrift)),'all')
     pdrift = np.load(directory + 'p-drift-2.npy').item()
     pSup0Drift = np.load(directory + 'p-Sup0-drift-2.npy').item()
     pSup0Opt = np.load(directory + 'p-Sup0-opt.npy').item()
@@ -51,7 +31,15 @@ while os.path.exists(directory):
     oldRLS = np.load(directory + 'oldRLS.npy').item()
     oldEA = np.load(directory + 'old1+1EA.npy').item()
     oldEASup0 = np.load(directory + 'old1+1Sup0.npy').item()
-    #staticpOpt = np.load(directory + 'static-p.npy')
+    # New Ones
+    staticP = np.load(directory + 'staticP-final.npy').item()
+    pSup0driftMedBound = np.load(directory + 'p-Sup0-drift-medBound-2.npy').item()
+    pSup0driftHighBound = np.load(directory + 'p-Sup0-drift-highBound-2.npy').item()
+    pSup0optMedBound = np.load(directory + 'p-Sup0-opt-medBound.npy').item()
+    pSup0optHighBound = np.load(directory + 'p-Sup0-opt-highBound.npy').item()
+    oldEALowerBound = np.load(directory + 'old1+1Sup0-lowerBound.npy').item()  
+    
+    
     
     result[number] = [RLSopt['Expected Time General'][0],
                       fulldrift['Expected Time General'][0],
@@ -62,9 +50,15 @@ while os.path.exists(directory):
                       baeck['Expected Time General'][0],
                       oldRLS['Expected Time General'][0],
                       oldEA['Expected Time General'][0],
-                      #staticpOpt[1],
-                      #staticpOpt[0],
-                      oldEASup0['Expected Time General'][0]]
+                      oldEASup0['Expected Time General'][0],
+                      
+                      staticP[1][1],
+                      staticP['Expected Time General'][0],
+                      pSup0driftMedBound['Expected Time General'][0],
+                      pSup0driftHighBound['Expected Time General'][0],
+                      pSup0optMedBound['Expected Time General'][0],
+                      pSup0optHighBound['Expected Time General'][0],
+                      oldEALowerBound['Expected Time General'][0]]
     
     if number != 100:
         number += 500
@@ -82,8 +76,16 @@ columns = ['E[dynamic-RLS-opt]',
            'E[dynamic-(1+1)-Baeck]',
            'E[static-RLS-1]',
            'E[static-(1+1)-1/n]',
-           #'E[static-(1+1)-p*]',
-           #'(1+1)-p*',
-           'E[old-1+1{>0}]']
+           'E[old-1+1{>0}]',
+           
+           'static-(1+1)-opt',
+           'E[static-(1+1)-opt]',
+           'E[dynamic-(1+1){>0}-p-drift-1/2n]',
+           'E[dynamic-(1+1){>0}-p-drift-1/n]',
+           'E[dynamic-(1+1){>0}-p-opt-1/2n]',
+           'E[dynamic-(1+1){>0}-p-opt-1/n]',
+           'E[old-1+1{>0}-1/2n]']
+
+
 dt.columns = columns
 dt.to_csv(PATH_TO_WRITE,sep=',')
