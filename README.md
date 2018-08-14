@@ -3,7 +3,7 @@ Source code to compute optimal (and other types) parameters of different algorit
 
 # BinVal
 
-You will find in this file some code to compute optimal values for the BinVal problem.
+You will find in this directory some code to compute optimal values for the BinVal problem.
 
 # EmpiricalResults
 
