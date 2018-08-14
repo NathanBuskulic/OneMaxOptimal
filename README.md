@@ -1,5 +1,5 @@
 # OneMaxOptimal
-3rd year internship source code for calculation of optimal parameters to solve the oneMax problem.
+Source code to compute optimal (and other types) parameters of different algorithms to solve the OneMax Problem
 
 # BinVal
 
@@ -7,7 +7,7 @@ You will find in this file some code to compute optimal values for the BinVal pr
 
 # EmpiricalResults
 
-You will find here codes to compute empirical data from parameters compited in **Summary**.
+You will find here codes to compute empirical data from parameters computed in **Summary**.
 
 # optimalEA
 
