@@ -19,46 +19,42 @@ result = {}
 directory = '100/'
 number = 100
 while number <= STOP_POINT and os.path.exists(directory):
-    tabLog = np.cumsum(np.log10(np.arange(1,number+1)))
+    nameList = ['RLS-opt', 'EA-opt', 'full-drift', 'p-drift-2', 
+                'p-Sup0-drift-2', 'p-Sup0-opt', 'baeck', 'oldRLS', 
+                'old1+1EA', 'old1+1Sup0', 'staticP-final', 'p-Sup0-drift-medBound-2',
+                'p-Sup0-drift-highBound-2', 'p-Sup0-opt-medBound', 'p-Sup0-opt-highBound', 'old1+1Sup0-lowerBound']
     
-    RLSopt = np.load(directory + 'RLS-opt.npy').item()
-    EAopt = np.load(directory + 'EA-opt.npy').item()
-    fulldrift = np.load(directory + 'full-drift.npy').item()
-    pdrift = np.load(directory + 'p-drift-2.npy').item()
-    pSup0Drift = np.load(directory + 'p-Sup0-drift-2.npy').item()
-    pSup0Opt = np.load(directory + 'p-Sup0-opt.npy').item()
-    baeck = np.load(directory + 'baeck.npy').item()
-    oldRLS = np.load(directory + 'oldRLS.npy').item()
-    oldEA = np.load(directory + 'old1+1EA.npy').item()
-    oldEASup0 = np.load(directory + 'old1+1Sup0.npy').item()
-    # New Ones
-    staticP = np.load(directory + 'staticP-final.npy').item()
-    pSup0driftMedBound = np.load(directory + 'p-Sup0-drift-medBound-2.npy').item()
-    pSup0driftHighBound = np.load(directory + 'p-Sup0-drift-highBound-2.npy').item()
-    pSup0optMedBound = np.load(directory + 'p-Sup0-opt-medBound.npy').item()
-    pSup0optHighBound = np.load(directory + 'p-Sup0-opt-highBound.npy').item()
-    oldEALowerBound = np.load(directory + 'old1+1Sup0-lowerBound.npy').item()  
+    data = {}  #The dict that will contains all the data we have for that number
+    for name in nameList:
+        if os.path.isfile(directory+name+'.npy'):
+             #We get the data
+             data[name] = np.load(directory + name + '.npy').item()
+        else:
+            # We create data that will show us that we don't have anything
+            if name != 'staticP-final':
+                data[name] = {'Expected Time General':[None,]}
+            else:
+                data[name] = {'Expected Time General':[None,],1:[None,None]}
+     
     
-    
-    
-    result[number] = [RLSopt['Expected Time General'][0],
-                      fulldrift['Expected Time General'][0],
-                      pSup0Opt['Expected Time General'][0],
-                      pSup0Drift['Expected Time General'][0],
-                      EAopt['Expected Time General'][0],
-                      pdrift['Expected Time General'][0],
-                      baeck['Expected Time General'][0],
-                      oldRLS['Expected Time General'][0],
-                      oldEA['Expected Time General'][0],
-                      oldEASup0['Expected Time General'][0],
+    result[number] = [data['RLS-opt']['Expected Time General'][0],
+                      data['full-drift']['Expected Time General'][0],
+                      data['p-Sup0-opt']['Expected Time General'][0],
+                      data['p-Sup0-drift-2']['Expected Time General'][0],
+                      data['EA-opt']['Expected Time General'][0],
+                      data['p-drift-2']['Expected Time General'][0],
+                      data['baeck']['Expected Time General'][0],
+                      data['oldRLS']['Expected Time General'][0],
+                      data['old1+1EA']['Expected Time General'][0],
+                      data['old1+1Sup0']['Expected Time General'][0],
                       
-                      staticP[1][1],
-                      staticP['Expected Time General'][0],
-                      pSup0driftMedBound['Expected Time General'][0],
-                      pSup0driftHighBound['Expected Time General'][0],
-                      pSup0optMedBound['Expected Time General'][0],
-                      pSup0optHighBound['Expected Time General'][0],
-                      oldEALowerBound['Expected Time General'][0]]
+                      data['staticP-final'][1][1],
+                      data['staticP-final']['Expected Time General'][0],
+                      data['p-Sup0-drift-medBound-2']['Expected Time General'][0],
+                      data['p-Sup0-drift-highBound-2']['Expected Time General'][0],
+                      data['p-Sup0-opt-medBound']['Expected Time General'][0],
+                      data['p-Sup0-opt-highBound']['Expected Time General'][0],
+                      data['old1+1Sup0-lowerBound']['Expected Time General'][0]]
     
     if number != 100:
         number += 500
