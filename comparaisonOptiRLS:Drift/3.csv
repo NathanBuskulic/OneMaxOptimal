@@ -1,0 +1,6 @@
+,dynamic-RLS-opt,E[dynamic-RLS-opt],dynamic-RLS-drift,T[dynamic-RLS-drift]
+Expected Time General,All,2.3750000000000004,All,2.7500000000000004
+3,0,0.0,0,0.0
+2,1,3.0,1,3.0
+1,2,3.0,3,4.0
+0,3,1.0,3,1.0
