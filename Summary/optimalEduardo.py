@@ -86,6 +86,7 @@ def optimalOneMax(n):
                 index = k
         
         bestSoFar[i] = (minTmp,index)
+        print(i)
         
     # We compute the expected time in general
     mySum = 0

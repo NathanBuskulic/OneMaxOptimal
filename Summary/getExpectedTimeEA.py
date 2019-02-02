@@ -127,6 +127,7 @@ def optimalOneMax(n,table):
             bestSoFar[i] = (bestSoFar[n-i][0] + 1,bestP)
         
     # We compute the expected time in general
+    #bestSoFar[0] = (1,1)
     mySum = 0
     for i in range(1,n+1):
         mySum += 10**(log10BinomCoef(n,i) - n * np.log10(2)) * bestSoFar[i][0]

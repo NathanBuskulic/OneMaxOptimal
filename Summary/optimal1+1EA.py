@@ -15,7 +15,9 @@ PATH_TO_TABLE = sys.argv[1]
 PATH_TO_WRITE = sys.argv[2]
 
 table = np.load(PATH_TO_TABLE).item()
-SIZE = len(table) - 1
+#print('abracadabra')
+#print(table)
+SIZE = len(table) - 2
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 
 
@@ -159,7 +161,8 @@ def optimalEA(table,n):
         else:
             trueP = opti.newton(derivFunction,approxP,args=(n,i,bestSoFar))
             bestSoFar[i] = (basicFunction(n,trueP,i,bestSoFar),trueP)
-      
+
+    #bestSoFar[0] = (1,1)
     # We compute the expected time in general
     mySum = 0
     for i in range(1,SIZE+1):

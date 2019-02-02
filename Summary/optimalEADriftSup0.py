@@ -15,7 +15,9 @@ import sys
 PATH_TO_TABLE = sys.argv[1]
 
 table = np.load(PATH_TO_TABLE).item()
-SIZE = len(table)
+print('WOUHOU----------------------------------------------------------------')
+print(table)
+SIZE = len(table)-2
 
 PATH_TO_WRITE = sys.argv[2]
 

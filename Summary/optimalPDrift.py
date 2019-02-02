@@ -15,7 +15,10 @@ PATH_TO_TABLE = sys.argv[1]
 PATH_TO_WRITE = sys.argv[2]
 
 table = np.load(PATH_TO_TABLE).item()
-SIZE = len(table)
+print("WAHAHAHAHAHHAAHHAHAHAHAHAHAHAHHAHAHA")
+print(table)
+SIZE = len(table)-2
+print(SIZE)
 tabLog = np.cumsum(np.log10(np.arange(1,SIZE+1)))
 
 

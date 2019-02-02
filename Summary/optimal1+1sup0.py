@@ -15,7 +15,10 @@ PATH_TO_TABLE = sys.argv[1]
 PATH_TO_WRITE = sys.argv[2]
 
 table = np.load(PATH_TO_TABLE).item()
-SIZE = len(table) - 1
+print('abracadabra')
+print(table)
+
+SIZE = len(table) - 2
 
 if len(sys.argv) >= 4:
     lowerBound = float(sys.argv[3])
